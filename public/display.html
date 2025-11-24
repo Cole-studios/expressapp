@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style\style.css">
+<link rel="stylesheet" href="bootstrap-4.6.2-dist\css\bootstrap.min.css">
+<script src="jquery-3.7.1.slim.js"></script>
+<script src="bootstrap-4.6.2-dist\js\bootstrap.bundle.min.js"></script>
+<script src="bootstrap-4.6.2-dist\js\bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+<header>
+</header>
+
+<div class="row" style="width:100%">
+<div class="col-sm-1"></div>
+<div class="table-responsive col-sm-10">
+	<h1> Accounts </h1>
+	<a href="create.html" class="btn btn-dark">Create an Account</a>
+	<a href="delete.html" class="btn btn-dark">Delete an Account</a>
+	<a href="index.html" class="btn btn-dark">Log Out</a><br><br>
+	<table id="dsp_tbl" class="table table-striped table-stripes table-hover bggray" style="width:100%">
+		<tr>
+			<th class="cust_th bg-dark text-light">Site</th>
+			<th class="cust_th bg-dark text-light">Username</th>
+			<th class="cust_th bg-dark text-light">Password</th>
+			<th class="cust_th bg-dark"></th>
+		</tr>
+	</table>
+</div>
+<div class="col-sm-1"></div>
+</div>
+
+<script>
+/*
+for reference only
+function drawTable(data) {
+    var rows = [];
+
+    for (var i = 0; i < data.length; i++) {
+        rows.push(drawRow(data[i]));
+    }
+
+    $("#personDataTable").append(rows);
+}
+
+function drawRow(rowData) {
+    var row = $("<tr />")
+    row.append($("<td>" + rowData.id + "</td>"));
+    row.append($("<td>" + rowData.firstName + "</td>"));
+    row.append($("<td>" + rowData.lastNaome + "</td>"));
+
+    return row;
+}*/
+fetch("/api/getaccs")
+	.then(response => response.json())
+	.then(result => {
+		if (result.success && result.data.length > 0) {
+			dispTbl(result.data);
+		} else {
+			console.log(result.message || "No data found");
+		}
+	})
+	.catch(err => console.error("Fetch error:", err));
+
+function dispTbl(data){
+	var rows = [];
+	var row;
+	
+	for(var i = 0; i < data.length; i++){
+		row = "<tr>";
+		row += "<td>" + data[i].site + "</td>";
+		row += "<td>" + data[i].username + "</td>";
+		row += "<td>" + data[i].password + "</td>";
+		row += `<td><button class="btn btn-warning btn-sm" 
+				onclick="editEntry('${data[i].site}', '${data[i].username}')">
+				Update
+                </button></td>`;
+		row += "</tr>";
+		rows.push(row);
+	}
+	
+	$("#dsp_tbl").append(rows);
+}
+
+function editEntry(site, username) {
+    window.location.href = `/update.html?site=${encodeURIComponent(site)}&user=${encodeURIComponent(username)}`;
+}
+</script>
+
+</body>
+</html>

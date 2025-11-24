@@ -1,0 +1,74 @@
+<html>
+<head>
+<link rel="stylesheet" href="style\style.css">
+<link rel="stylesheet" href="bootstrap-4.6.2-dist\css\bootstrap.min.css">
+<script src="jquery-3.7.1.slim.js"></script>
+<script src="bootstrap-4.6.2-dist\js\bootstrap.bundle.min.js"></script>
+<script src="bootstrap-4.6.2-dist\js\bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+<div class="row">
+<div class="col-sm-3"></div>
+<div class="col-sm-6">
+	<h1> Create Form </h1>
+	<a href="display.html" class="btn btn-dark">Return</a><br><br>
+	<form id="update_form" method="post">
+		<div class="form-group">
+			<label for="site">Site</label>
+			<input id="site" class="form-control" name="site" type="text">
+		</div>
+		<div class="form-group">
+			<label for="user">Username</label>
+			<input id="user" class="form-control" name="user" type="text">
+		</div>
+		<div class="form-group">
+			<label for="pass">Password</label>
+			<input id="pass" class="form-control" name="pass" type="password">
+		</div>
+		<div class="form-group">
+			Show Password  <input id="passcheck" type="checkbox" onclick="showPass()">
+		</div>
+		<div class="form-group">
+			<input id="logf_submit" class="btn btn-dark" type="submit">
+		</div>
+	</form>
+</div>
+<div class="col-sm-3"></div>
+</div>
+
+<script>
+// to-edit
+function showPass() {
+  const passField = document.getElementById("pass");
+  passField.type = passField.type === "password" ? "text" : "password";
+}
+
+const params = new URLSearchParams(window.location.search);
+document.getElementById("site").value = params.get("site");
+document.getElementById("user").value = params.get("user");
+
+document.getElementById("update_form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const site = document.getElementById("site").value;
+    const user = document.getElementById("user").value;
+    const pass = document.getElementById("pass").value;
+
+    const response = await fetch("/api/updateEntry", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ site, user, pass })
+    });
+
+    const data = await response.json();
+    alert(data.msg);
+	if (data.success) {
+		window.location.href = "/display.html";
+	}
+});
+</script>
+
+</body>
+</html>

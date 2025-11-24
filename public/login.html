@@ -1,0 +1,68 @@
+<html>
+<head>
+<link rel="stylesheet" href="style\style.css">
+<link rel="stylesheet" href="bootstrap-4.6.2-dist\css\bootstrap.min.css">
+<script src="jquery-3.7.1.slim.js"></script>
+<script src="bootstrap-4.6.2-dist\js\bootstrap.bundle.min.js"></script>
+<script src="bootstrap-4.6.2-dist\js\bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+<div class="row">
+<div class="col-sm-4"></div>
+<div class="col-sm-4">
+	<h1> Login Form </h1>
+	<a href="index.html" class="btn btn-dark">Return</a><br><br>
+	<form id="login_form" method="post">
+		<div class="form-group">
+			<label for="logf_user">Username</label>
+			<input id="logf_user" class="form-control" name="user" type="text">
+		</div>
+		<div class="form-group">
+			<label for="logf_pass">Password</label>
+			<input id="logf_pass" class="form-control" name="pass" type="password" name="password">
+		</div>
+		<div class="form-group">
+			Show Password  <input id="passcheck" type="checkbox" onclick="showPass()">
+		</div>
+		<div class="form-group">
+			<input id="logf_submit" class="btn btn-dark" type="submit">
+		</div>
+	</form>
+</div>
+<div class="col-sm-4"></div>
+</div>
+
+<script>
+// to-edit
+function showPass() {
+  const passField = document.getElementById("pass");
+  passField.type = passField.type === "password" ? "text" : "password";
+}
+
+document.getElementById("login_form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const user = document.getElementById("logf_user").value;
+    const pass = document.getElementById("logf_pass").value;
+
+    const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user, pass })
+    })
+		.then(res => res.json())
+		.then(data => {
+		if (data.success) {
+			window.location.href = data.redirect;
+		}
+    });
+
+    const data = await response.json();
+    alert(data.message);
+});
+</script>
+
+</body>
+</html>
